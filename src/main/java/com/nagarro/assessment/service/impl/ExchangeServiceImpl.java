@@ -4,23 +4,29 @@ import com.nagarro.assessment.dto.BillRequestDTO;
 import com.nagarro.assessment.dto.BillResponseDTO;
 import com.nagarro.assessment.dto.CurrencyResponseDTO;
 import com.nagarro.assessment.enums.ItemType;
+import com.nagarro.assessment.model.rules.DiscountRule;
+import com.nagarro.assessment.model.rules.DiscountRules;
 import com.nagarro.assessment.service.ExchangeService;
+import com.nagarro.assessment.utils.Util;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
     @Value("${currency.exchange.url}")
     private String currencyApiUrl;
-
     private final RestTemplate restTemplate;
+    private final DiscountRules discountRules;
 
-    public ExchangeServiceImpl(RestTemplate restTemplate) {
+    public ExchangeServiceImpl(RestTemplate restTemplate, DiscountRules discountRules) {
         this.restTemplate = restTemplate;
+        this.discountRules = discountRules;
     }
 
     @Override
@@ -29,31 +35,36 @@ public class ExchangeServiceImpl implements ExchangeService {
         double nonGroceryAmount= calculatePercentageDiscApplicableAmount(billRequestDTO.getItems());
         double groceryAmount= calculatePercentageDiscNAAmount(billRequestDTO.getItems());
 
-       double discountedAmount= nonGroceryAmount-calculatePercentageBasedDiscount(nonGroceryAmount,billRequestDTO);
+       double discountedAmount= applyPercentageBasedDiscount(nonGroceryAmount,billRequestDTO);
         discountedAmount=discountedAmount+groceryAmount;
-       discountedAmount=discountedAmount-calculateUniversalDiscount(discountedAmount);
+       discountedAmount= applyUniversalDiscount(discountedAmount, billRequestDTO);
 
 
         double exchangeRate = getExchangeRate(billRequestDTO.getOriginalCurrency(), billRequestDTO.getTargetCurrency());
-        return new BillResponseDTO(discountedAmount * exchangeRate, billRequestDTO.getTargetCurrency());
+        return new BillResponseDTO(Util.limitToThreeDecimalDigit(discountedAmount * exchangeRate), billRequestDTO.getTargetCurrency());
 
     }
 
-    private double calculateUniversalDiscount(double discountedAmount) {
-        return ((int)discountedAmount/100)*5.0;
-    }
+    private double applyUniversalDiscount(double discountedAmount, BillRequestDTO billRequestDTO) {
 
-    private double calculatePercentageBasedDiscount(double nonGroceryAmount, BillRequestDTO billRequestDTO) {
-        double percentageDiscount = 0.0;
-        if ("employee".equalsIgnoreCase(billRequestDTO.getUserType())) {
-            percentageDiscount = nonGroceryAmount * 0.30; // 30% discount for employees
-        } else if ("affiliate".equalsIgnoreCase(billRequestDTO.getUserType())) {
-            percentageDiscount = nonGroceryAmount * 0.10; // 10% discount for affiliates
-        } else if (billRequestDTO.getCustomerTenure() > 2) {
-            percentageDiscount = nonGroceryAmount * 0.05; // 5% discount for customers over 2 years
+        for(DiscountRule rule: discountRules.getUniversalDiscountRules()){
+            if(rule.isApplicable(billRequestDTO)){
+                discountedAmount= rule.apply(billRequestDTO,discountedAmount);
+                break;
+            }
         }
+        return discountedAmount;
 
-        return percentageDiscount;
+    }
+
+    private double applyPercentageBasedDiscount(double nonGroceryAmount, BillRequestDTO billRequestDTO) {
+        for(DiscountRule rule: discountRules.getPercenBasedDiscountRules()){
+            if(rule.isApplicable(billRequestDTO)){
+                nonGroceryAmount= rule.apply(billRequestDTO,nonGroceryAmount);
+                break;
+            }
+        }
+        return nonGroceryAmount;
     }
 
     private double calculatePercentageDiscNAAmount(List<BillRequestDTO.Item> items) {
@@ -70,16 +81,37 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .sum();
     }
 
-    private double getExchangeRate(String originalCurrency, String targetCurrency) {
-        String url = currencyApiUrl + targetCurrency;
-        CurrencyResponseDTO response = restTemplate.getForObject(url, CurrencyResponseDTO.class);
-
-        if (response != null && response.getResult().equals("success")) {
-            Map<String, Double> conversionRates = response.getConversionRates();
-            return conversionRates.get(targetCurrency);
-        }else{
-            throw new RuntimeException();
+    public double getExchangeRate(String originalCurrency,
+                                  String targetCurrency) {
+        if (StringUtils.isBlank(originalCurrency) || !Util.isValidCurrencyCodeFormat(originalCurrency))  {
+            throw new IllegalArgumentException("Original currency is required and must be a 3 letter code");
         }
+
+        if (StringUtils.isBlank(targetCurrency) || !Util.isValidCurrencyCodeFormat(targetCurrency)) {
+            throw new IllegalArgumentException("Target currency is required and must be a 3 letter code");
+        }
+
+        try {
+            String url = currencyApiUrl + originalCurrency;
+            System.out.println("URL :" +url);
+            CurrencyResponseDTO response = restTemplate.getForObject(url, CurrencyResponseDTO.class);
+
+            if (response != null && "success".equalsIgnoreCase(response.getResult())) {
+                Map<String, Double> conversionRates = response.getConversionRates();
+                return Optional.ofNullable(conversionRates.get(targetCurrency))
+                        .orElseThrow(() -> new IllegalArgumentException("Target currency rate not found."));
+            } else {
+                throw new RuntimeException("Failed to retrieve exchange rate. API response was unsuccessful. Please verify the original currency code ");
+            }
+        } catch (Exception ex) {
+            //log.error(ex.getMessage());
+            throw new RuntimeException("Error in fetching the exchange conversion rates.");
+        }
+    }
+
+    @Override
+    public void setCurrencyApiUrl(String currencyApiUrl) {
+        this.currencyApiUrl=currencyApiUrl;
     }
 
 }

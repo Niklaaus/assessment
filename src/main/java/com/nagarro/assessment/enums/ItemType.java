@@ -1,12 +1,15 @@
 package com.nagarro.assessment.enums;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 public enum ItemType {
-    GROCERY, NON_GROCERY;
+    GROCERY, ELECTRONICS, APPARELS, HOME_DECOR, STATIONARY;
 
     public static Set<ItemType> percentageDiscountApplicable(){
-        return Set.of(NON_GROCERY);
+        EnumSet<ItemType> allItems = EnumSet.allOf(ItemType.class);
+        allItems.removeAll(percentageDiscountNotApplicable());
+        return allItems;
     }
 
     public static Set<ItemType> percentageDiscountNotApplicable(){

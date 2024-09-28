@@ -1,4 +1,4 @@
-package com.nagarro.assessment.entity;
+package com.nagarro.assessment.model.entity;
 
 import jakarta.persistence.Entity;
 
@@ -15,7 +15,7 @@ public class User {
 
     private String username;
     private String password;
-    private String role;
+
 
     public Long getId() {
         return id;
@@ -41,11 +41,5 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
