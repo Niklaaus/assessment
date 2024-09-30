@@ -15,7 +15,7 @@ This is a SpringBoot application designed to calculate the final amount of an in
 ## Installation & Setup
 #### Prerequisites
 Ensure you have the following installed:
-- Java 17
+- Java 17 or higher
 - working internet connection
 
 ## Steps to Set Up:
