@@ -1,5 +1,5 @@
 
-# The Currency Exchange and Discount Calculation application:
+# The Retail Store Discounts
 
 ## Overview
 This is a SpringBoot application designed to calculate the final amount of an invoice by applying discounts and converting it into the requested currency. It considers multiple discount rules based on user-type, item-type and the tenure or user''s relationship with the store and  applies the highest applicable discount on it (except on grocery items). Then on the top of this, applies a flat discount of $5 per $100 on the discounted total. After that, the net payable is converted from the original currency to the target currency using the retrieved exchange rates (updated hourly).
@@ -63,7 +63,7 @@ The application calculates the discount on the total amount by applying highest 
  - Each discount logic is encapsulated in its own class, separate from the others. The billing logic doesn't depend on any specific discount implementation but instead uses two common interfaces to apply the discounts.
 
 #### Open-Closed principle :
- - APplication follows the Open-Closed principle for maintaining different types of discounts.
+ - Application follows the Open-Closed principle for maintaining different types of discounts. Discounts can be added or removed from the application without changing any other piece of code.
 
 #### Unit Testing:
  - Comprehensive test coverage using JUnit to validate various discount scenarios.
@@ -200,13 +200,27 @@ The application accepts input in the following format:
 </li>
 </ul>
 
+Sample Request Screenshot:
+![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/request1.png?raw=true)
 
 #### To access the endopoint:
 - API URL ->  localhost:8080/api/calculate (change the port if used a different port while running the application in Step 3)
 - method -> post
 - Authentication : Basic. Make sure to add `Authorization` header with any of the user credentials mentioned in the data.sql. For example : `Authorization: Basic dXNlcjpwYXNzd29yZA==`
 
+Sample authentication header screenshot:
+![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/auth1.png?raw=true)
 
+#### Response :
+- Successfull response will be in the format:
+```md
+  {
+    "amount": 640.283,
+    "currency": "EUR"
+}
+```
+Sample response screenshot:
+![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/response1.png?raw=true)
 
 ## Example Scenario:
 For a user who is an employee and has a bill of $500 for non-grocery items and $400 for grocery items and wants the final bill in EUR :
