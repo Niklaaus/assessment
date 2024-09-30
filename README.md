@@ -10,6 +10,7 @@ This is a SpringBoot application designed to calculate the final amount of an in
 - **JaCoCo** for code coverage report
 - **Spring Boot** as application framework
 - **JUnit5** for unit testing
+- **h2 in-memory database** for storing user credentials
 
 ## Installation & Setup
 #### Prerequisites
@@ -151,7 +152,7 @@ The application calculates the discount on the total amount by applying highest 
 ![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/uml.png?raw=true)
 
 #### Assumption
-The applicaiton assumes that the API endpoint is being used by a client-system which validates the Item category, user category and Customer-relationship tenure at their end and ensure the price of each item is correct as per their catalogue.
+The application assumes that the API endpoint is being used by a client-system which validates the Item category, user category and Customer-relationship tenure at their end and ensure the price of each item is correct as per their catalogue.
 
 ## Usage
 This application calculates the net payable amount based on the following rules:
@@ -227,7 +228,7 @@ For a user who is an employee and has a bill of \$500 for non-grocery items and 
 - 30% discount is applied to \$500 (as he is an employee); (effective total=\$350)
 - No percentage based discount on grocery items; (effective total \$350+\$400= \$750)
 - flat discount of \$5 on every \$100 in the discounted total; (effective total = \$750-((750/100)*5) = \$715 )
-- At the time of writing, USD to EUR conversion rate is <b>0.8955</b>. So final bill amount in EUR = 715*0.8955 = <b>EUR 640.283</b>
+- At the time of writing, USD to EUR conversion rate is <b>0.8955</b>. So final bill amount in EUR = 715*0.8955 = <b>EUR 640.283</b> (rounded off to 3 digits after decimal)
 
 
 

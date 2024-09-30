@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagarro.assessment.constants.CommonConstants;
+import com.nagarro.assessment.constants.ErrorMessages;
 import com.nagarro.assessment.dto.BillRequestDTO;
 import com.nagarro.assessment.dto.BillResponseDTO;
 import com.nagarro.assessment.model.enums.ItemType;
@@ -143,13 +144,13 @@ public class ExchangeControllerTest {
                 new BillRequestDTO.Item("Item2", ItemType.GROCERY, 0.0)
         ));
 
-        MvcResult result = mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
+         mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidBillRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").exists())
-                .andReturn();
+                ;
     }
 
 
@@ -165,12 +166,56 @@ public class ExchangeControllerTest {
                 new BillRequestDTO.Item("Item2", ItemType.GROCERY, 0.0)
         ));
 
-        MvcResult result = mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
+        mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidBillRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").exists())
-                .andReturn();
+                ;
+    }
+
+    @Test
+    void testCalculate_BadRequest_wrongTargetCurrFormat() throws Exception {
+        BillRequestDTO invalidBillRequest = new BillRequestDTO();
+        invalidBillRequest.setCustomerTenure(0);
+        invalidBillRequest.setOriginalCurrency("USD");
+        invalidBillRequest.setTargetCurrency("EUR11");
+        invalidBillRequest.setUserType(UserType.EMPLOYEE);
+        invalidBillRequest.setItems(List.of(
+                new BillRequestDTO.Item("Item1", ItemType.ELECTRONICS, 150.0),
+                new BillRequestDTO.Item("Item2", ItemType.GROCERY, 0.0)
+        ));
+
+        mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidBillRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value(ErrorMessages.INVALID_TARGET_CURRENCY))
+        ;
+    }
+
+    @Test
+    void testCalculate_BadRequest_wrongOriginalCurrFormat() throws Exception {
+        BillRequestDTO invalidBillRequest = new BillRequestDTO();
+        invalidBillRequest.setCustomerTenure(0);
+        invalidBillRequest.setOriginalCurrency("USD11");
+        invalidBillRequest.setTargetCurrency("EUR");
+        invalidBillRequest.setUserType(UserType.EMPLOYEE);
+        invalidBillRequest.setItems(List.of(
+                new BillRequestDTO.Item("Item1", ItemType.ELECTRONICS, 150.0),
+                new BillRequestDTO.Item("Item2", ItemType.GROCERY, 0.0)
+        ));
+
+        mockMvc.perform(post(CommonConstants.CALCULATE_API_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidBillRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.error").value(ErrorMessages.INVALID_ORIGINAL_CURRENCY))
+        ;
     }
 }
