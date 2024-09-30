@@ -3,8 +3,7 @@ package com.nagarro.assessment.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.nagarro.assessment.constants.ErrorMessages;
-import com.nagarro.assessment.model.service.ExchangeService;
-import com.nagarro.assessment.model.service.impl.ExchangeServiceImpl;
+import com.nagarro.assessment.service.impl.ExchangeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

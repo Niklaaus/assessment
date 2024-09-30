@@ -3,7 +3,7 @@ package com.nagarro.assessment.controller;
 import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.dto.BillRequestDTO;
 import com.nagarro.assessment.dto.BillResponseDTO;
-import com.nagarro.assessment.model.service.ExchangeService;
+import com.nagarro.assessment.service.ExchangeService;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

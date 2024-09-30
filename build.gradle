@@ -7,6 +7,8 @@ plugins {
 
 group = 'com.nagarro'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility ='17'
+targetCompatibility ='17'
 
 java {
 	toolchain {

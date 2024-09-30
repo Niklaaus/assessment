@@ -1,8 +1,8 @@
-package com.nagarro.assessment.model.service;
+package com.nagarro.assessment.service;
 
 import com.nagarro.assessment.constants.ErrorMessages;
 import com.nagarro.assessment.model.entity.User;
-import com.nagarro.assessment.model.repository.UserRepository;
+import com.nagarro.assessment.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

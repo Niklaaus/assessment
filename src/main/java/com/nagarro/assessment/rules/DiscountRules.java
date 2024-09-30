@@ -1,4 +1,4 @@
-package com.nagarro.assessment.model.rules;
+package com.nagarro.assessment.rules;
 
 import org.springframework.stereotype.Component;
 

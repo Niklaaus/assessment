@@ -1,8 +1,7 @@
 package com.nagarro.assessment.service;
 
 import com.nagarro.assessment.model.entity.User;
-import com.nagarro.assessment.model.repository.UserRepository;
-import com.nagarro.assessment.model.service.CustomUserDetailsService;
+import com.nagarro.assessment.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

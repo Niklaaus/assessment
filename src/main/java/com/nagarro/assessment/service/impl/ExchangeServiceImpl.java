@@ -1,4 +1,4 @@
-package com.nagarro.assessment.model.service.impl;
+package com.nagarro.assessment.service.impl;
 
 import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.constants.ErrorMessages;
@@ -6,9 +6,9 @@ import com.nagarro.assessment.dto.BillRequestDTO;
 import com.nagarro.assessment.dto.BillResponseDTO;
 import com.nagarro.assessment.dto.CurrencyResponseDTO;
 import com.nagarro.assessment.model.enums.ItemType;
-import com.nagarro.assessment.model.rules.DiscountRule;
-import com.nagarro.assessment.model.rules.DiscountRules;
-import com.nagarro.assessment.model.service.ExchangeService;
+import com.nagarro.assessment.rules.DiscountRule;
+import com.nagarro.assessment.rules.DiscountRules;
+import com.nagarro.assessment.service.ExchangeService;
 import com.nagarro.assessment.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.apache.logging.log4j.LogManager;

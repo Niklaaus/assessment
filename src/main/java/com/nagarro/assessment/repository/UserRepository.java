@@ -1,4 +1,4 @@
-package com.nagarro.assessment.model.repository;
+package com.nagarro.assessment.repository;
 
 
 import com.nagarro.assessment.model.entity.User;
