@@ -56,7 +56,7 @@ The application calculates the discount on the total amount by applying highest 
 ##### Note: Only one percentage-based discount can be applied per bill, and these are not applicable to groceries.
 
 #### Fixed Discount:
-- A \$5 discount is applied for every \$100 in the amount calculated after applying the percentage discount ,if any, on the applicable items.
+- A \$5 discount is applied for every \$100 in the amount calculated after applying the percentage discount.
 
 
 #### Strategy design pattern:
