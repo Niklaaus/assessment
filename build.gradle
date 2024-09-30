@@ -57,7 +57,7 @@ task buildAndTest {
 	}
 }
 bootJar {
-	mainClass = 'com.nagarro.assessment.CurrencyExchangerApplication' // Replace with your main class
+	mainClass = 'com.nagarro.assessment.CurrencyExchangerApplication'
 }
 build.dependsOn buildAndTest
 task copyJacocoReport(type: Copy) {
