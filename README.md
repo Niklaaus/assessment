@@ -3,6 +3,9 @@
 Requirements to run the application :
 
 * Java 17
+* internet connectivity.
+
+API used to get conversion rates : `https://v6.exchangerate-api.com/v6/2c83f9fab3b91105b416cf04/latest/` (takes the original/base currency code as path param. so for USD, the URL shall be `https://v6.exchangerate-api.com/v6/2c83f9fab3b91105b416cf04/latest/USD`
 
 Steps to run the application :
 
@@ -24,6 +27,7 @@ Steps to run the application :
 4. Test the API :
     * API URL ->  localhost:\<port>/api/calculate
     * method -> post
+    * Authentication : Basic. Make sure to add `Authorization` header with any of the user credentials mentioned in the data.sql. For example : `Authorization: Basic dXNlcjpwYXNzd29yZA==`
     * sample request body: 
         > {
     "items": [
