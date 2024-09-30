@@ -1,14 +1,18 @@
-package com.nagarro.assessment.service.impl;
+package com.nagarro.assessment.model.service.impl;
 
+import com.nagarro.assessment.constants.CommonConstants;
+import com.nagarro.assessment.constants.ErrorMessages;
 import com.nagarro.assessment.dto.BillRequestDTO;
 import com.nagarro.assessment.dto.BillResponseDTO;
 import com.nagarro.assessment.dto.CurrencyResponseDTO;
-import com.nagarro.assessment.enums.ItemType;
+import com.nagarro.assessment.model.enums.ItemType;
 import com.nagarro.assessment.model.rules.DiscountRule;
 import com.nagarro.assessment.model.rules.DiscountRules;
-import com.nagarro.assessment.service.ExchangeService;
+import com.nagarro.assessment.model.service.ExchangeService;
 import com.nagarro.assessment.utils.Util;
 import io.micrometer.common.util.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +23,9 @@ import java.util.Optional;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
+
+    private static final Logger logger = LogManager.getLogger(ExchangeServiceImpl.class);
+
     @Value("${currency.exchange.url}")
     private String currencyApiUrl;
     private final RestTemplate restTemplate;
@@ -34,11 +41,14 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         double nonGroceryAmount= calculatePercentageDiscApplicableAmount(billRequestDTO.getItems());
         double groceryAmount= calculatePercentageDiscNAAmount(billRequestDTO.getItems());
+        logger.info("amount for eligible percentage discount: {}", nonGroceryAmount);
+        logger.info("amount without eligible percentage discount: {}", groceryAmount);
 
        double discountedAmount= applyPercentageBasedDiscount(nonGroceryAmount,billRequestDTO);
         discountedAmount=discountedAmount+groceryAmount;
        discountedAmount= applyUniversalDiscount(discountedAmount, billRequestDTO);
 
+        logger.info("Final discounted amount : {} {}",discountedAmount, billRequestDTO.getOriginalCurrency());
 
         double exchangeRate = getExchangeRate(billRequestDTO.getOriginalCurrency(), billRequestDTO.getTargetCurrency());
         return new BillResponseDTO(Util.limitToThreeDecimalDigit(discountedAmount * exchangeRate), billRequestDTO.getTargetCurrency());
@@ -84,28 +94,32 @@ public class ExchangeServiceImpl implements ExchangeService {
     public double getExchangeRate(String originalCurrency,
                                   String targetCurrency) {
         if (StringUtils.isBlank(originalCurrency) || !Util.isValidCurrencyCodeFormat(originalCurrency))  {
-            throw new IllegalArgumentException("Original currency is required and must be a 3 letter code");
+            logger.error("Invalid original currency code :{}", originalCurrency);
+            throw new IllegalArgumentException(ErrorMessages.INVALID_ORIGINAL_CURRENCY);
         }
 
         if (StringUtils.isBlank(targetCurrency) || !Util.isValidCurrencyCodeFormat(targetCurrency)) {
-            throw new IllegalArgumentException("Target currency is required and must be a 3 letter code");
+            logger.error("Invalid target currency code :{}", originalCurrency);
+            throw new IllegalArgumentException(ErrorMessages.INVALID_TARGET_CURRENCY);
         }
 
         try {
             String url = currencyApiUrl + originalCurrency;
-            System.out.println("URL :" +url);
             CurrencyResponseDTO response = restTemplate.getForObject(url, CurrencyResponseDTO.class);
 
-            if (response != null && "success".equalsIgnoreCase(response.getResult())) {
+            if (response != null && CommonConstants.SUCCESS.equalsIgnoreCase(response.getResult())) {
+                logger.info("Successfully received response from Currency Conversion API");
                 Map<String, Double> conversionRates = response.getConversionRates();
                 return Optional.ofNullable(conversionRates.get(targetCurrency))
-                        .orElseThrow(() -> new IllegalArgumentException("Target currency rate not found."));
+                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessages.TARGET_CURRENCY_NOTFOUND));
             } else {
-                throw new RuntimeException("Failed to retrieve exchange rate. API response was unsuccessful. Please verify the original currency code ");
+                logger.error(ErrorMessages.API_RESPONSE_FAILED + " : original :{}, target: {}", originalCurrency, targetCurrency);
+                throw new RuntimeException(ErrorMessages.API_RESPONSE_FAILED);
             }
         } catch (Exception ex) {
-            //log.error(ex.getMessage());
-            throw new RuntimeException("Error in fetching the exchange conversion rates.");
+            logger.error("error in conversion from {} to {}",originalCurrency, targetCurrency);
+            logger.error(ex);
+            throw new RuntimeException(ErrorMessages.ERROR_EXCHANGE_API);
         }
     }
 

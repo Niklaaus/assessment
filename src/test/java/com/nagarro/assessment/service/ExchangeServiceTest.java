@@ -1,12 +1,10 @@
 package com.nagarro.assessment.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
-import com.nagarro.assessment.dto.CurrencyResponseDTO;
-import com.nagarro.assessment.service.impl.ExchangeServiceImpl;
+import com.nagarro.assessment.constants.ErrorMessages;
+import com.nagarro.assessment.model.service.ExchangeService;
+import com.nagarro.assessment.model.service.impl.ExchangeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,7 +41,7 @@ class ExchangeServiceTest {
         );
 
         // Assert exception message
-        assertEquals("Original currency is required and must be a 3 letter code", thrown.getMessage());
+        assertEquals(ErrorMessages.INVALID_ORIGINAL_CURRENCY, thrown.getMessage());
     }
 
     @Test
@@ -59,7 +57,7 @@ class ExchangeServiceTest {
         );
 
         // Assert exception message
-        assertEquals("Target currency is required and must be a 3 letter code", thrown.getMessage());
+        assertEquals(ErrorMessages.INVALID_TARGET_CURRENCY, thrown.getMessage());
     }
 
     }

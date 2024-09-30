@@ -1,7 +1,8 @@
-package com.nagarro.assessment.service;
+package com.nagarro.assessment.model.service;
 
+import com.nagarro.assessment.constants.ErrorMessages;
 import com.nagarro.assessment.model.entity.User;
-import com.nagarro.assessment.repository.UserRepository;
+import com.nagarro.assessment.model.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
 
         return new UserDetails() {

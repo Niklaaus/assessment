@@ -1,5 +1,6 @@
 package com.nagarro.assessment.model.rules;
 
+import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.dto.BillRequestDTO;
 import org.springframework.stereotype.Component;
 
@@ -7,16 +8,16 @@ import org.springframework.stereotype.Component;
 public class LongTermUserDiscountRule implements PercentageBasedDiscountRule{
     @Override
     public double apply(BillRequestDTO bill, double currentTotal) {
-        return currentTotal * 0.95; // 5% discount
+        return currentTotal * CommonConstants.LONGTERM_DISCOUNT_BILL_FACTOR;
     }
 
     @Override
     public boolean isApplicable(BillRequestDTO bill) {
-        return bill.getCustomerTenure() > 2;
+        return bill.getCustomerTenure() > CommonConstants.LONGTERM_TENURE;
     }
 
     @Override
     public int priority() {
-        return 5;
+        return CommonConstants.LONGTERM_DISCOUNT_PRIORITY;
     }
 }

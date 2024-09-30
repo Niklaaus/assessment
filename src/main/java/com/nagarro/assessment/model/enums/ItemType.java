@@ -1,4 +1,4 @@
-package com.nagarro.assessment.enums;
+package com.nagarro.assessment.model.enums;
 
 import java.util.EnumSet;
 import java.util.Set;

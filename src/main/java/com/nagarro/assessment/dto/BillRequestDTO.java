@@ -1,7 +1,8 @@
 package com.nagarro.assessment.dto;
 
-import com.nagarro.assessment.enums.ItemType;
-import com.nagarro.assessment.enums.UserType;
+import com.nagarro.assessment.constants.ErrorMessages;
+import com.nagarro.assessment.model.enums.ItemType;
+import com.nagarro.assessment.model.enums.UserType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
@@ -9,24 +10,34 @@ import jakarta.validation.constraints.*;
 import java.util.List;
 
 public class BillRequestDTO {
+    @Override
+    public String toString() {
+        return "BillRequestDTO{" +
+                "items=" + items +
+                ", userType=" + userType +
+                ", customerTenure=" + customerTenure +
+                ", originalCurrency='" + originalCurrency + '\'' +
+                ", targetCurrency='" + targetCurrency + '\'' +
+                '}';
+    }
 
-    @NotEmpty(message = "At least one item is required")
+    @NotEmpty(message = ErrorMessages.ITEMS_EMPTY)
     private List<@Valid Item> items;
 
-    @NotNull(message = "required field")
+    @NotNull(message = ErrorMessages.REQUIRED_FIELD)
     private UserType userType;
 
-    @Min(value = 0, message = "can't be less than 0")
+    @Min(value = 0, message = ErrorMessages.NEGATIVE_NOT_ALLOWED)
     private double customerTenure;
 
-    @NotNull(message = "required field")
+    @NotNull(message = ErrorMessages.REQUIRED_FIELD)
   //  @Size(min = 3, max = 3, message = "must be a 3-letter code")
-    @Pattern(regexp = "^[A-Z]{3}$", message = "must be a valid 3-letter currency code")
+    @Pattern(regexp = "^[A-Z]{3}$", message = ErrorMessages.INVALID_ORIGINAL_CURRENCY)
     private String originalCurrency;
 
-    @NotNull(message = "required field")
+    @NotNull(message = ErrorMessages.REQUIRED_FIELD)
    // @Size(min = 3, max = 3, message = "must be a 3-letter code")
-    @Pattern(regexp = "^[A-Z]{3}$", message = "must be a valid 3-letter currency code")
+    @Pattern(regexp = "^[A-Z]{3}$", message = ErrorMessages.INVALID_TARGET_CURRENCY)
     private String targetCurrency;
 
     public List<Item> getItems() {
@@ -76,12 +87,21 @@ public class BillRequestDTO {
             this.amount = amount;
         }
 
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "name='" + name + '\'' +
+                    ", category=" + category +
+                    ", amount=" + amount +
+                    '}';
+        }
+
         private String name;
 
-        @NotNull(message = "required field")
+        @NotNull(message = ErrorMessages.REQUIRED_FIELD)
         private ItemType category;
 
-        @Min(value = 0, message = "can't be less than 0")
+        @Min(value = 0, message = ErrorMessages.NEGATIVE_NOT_ALLOWED)
         private double amount;
 
         public String getName() {

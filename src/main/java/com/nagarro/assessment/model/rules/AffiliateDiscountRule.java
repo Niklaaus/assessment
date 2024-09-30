@@ -1,7 +1,8 @@
 package com.nagarro.assessment.model.rules;
 
+import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.dto.BillRequestDTO;
-import com.nagarro.assessment.enums.UserType;
+import com.nagarro.assessment.model.enums.UserType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +15,12 @@ public class AffiliateDiscountRule implements PercentageBasedDiscountRule {
 
     @Override
     public double apply(BillRequestDTO bill, double currentTotal) {
-        return currentTotal * 0.90; // 10% discount
+        return currentTotal * CommonConstants.AFFILIATE_DISCOUNTED_BILL_FACTOR;
     }
 
     @Override
     public int priority() {
-        return 10;
+        return CommonConstants.AFFILIATE_DISCOUNT_PRIORITY;
     }
 
 }

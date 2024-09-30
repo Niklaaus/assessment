@@ -1,7 +1,8 @@
 package com.nagarro.assessment.model.rules;
 
+import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.dto.BillRequestDTO;
-import com.nagarro.assessment.enums.UserType;
+import com.nagarro.assessment.model.enums.UserType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +15,12 @@ public class EmployeeDiscountRule implements PercentageBasedDiscountRule {
 
     @Override
     public double apply(BillRequestDTO bill, double currentTotal) {
-        return currentTotal * 0.70; // 30% discount
+        return currentTotal * CommonConstants.EMPLOYEE_DISCOUNTED_BILL_FACTOR;
     }
 
     @Override
     public int priority() {
-        return 30;
+        return CommonConstants.EMPLOYEE_DISCOUNT_PRIORITY;
     }
 
 

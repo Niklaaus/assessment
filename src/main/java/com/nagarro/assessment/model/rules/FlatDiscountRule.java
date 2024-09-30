@@ -1,5 +1,6 @@
 package com.nagarro.assessment.model.rules;
 
+import com.nagarro.assessment.constants.CommonConstants;
 import com.nagarro.assessment.dto.BillRequestDTO;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ public class FlatDiscountRule implements UniversalDiscountRule {
 
     @Override
     public double apply(BillRequestDTO bill, double currentTotal) {
-        double discount = ((int)currentTotal/100)*5.0;
+        double discount = ((int)currentTotal/100)* CommonConstants.FLAT_DISCOUNT_BILL_FACTOR;
         return currentTotal - discount;
     }
 
