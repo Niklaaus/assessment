@@ -36,7 +36,13 @@ Steps to run the application :
     "targetCurrency": "EUR"
 }
 
-5. if coverage report is generated in Step 2 , it would be found in the <b>reports/index.html</b> folder in the project root directory.
+5. Sample response :
+   > {
+    "amount": 134.325,
+    "currency": "EUR"
+}
 
-6. logs are generated inside <b>logs</b> folder in the same directory where the jar is executed
+6. if coverage report is generated in Step 2 , it would be found in the <b>reports/index.html</b> folder in the project root directory.
+
+7. logs are generated inside <b>logs</b> folder in the same directory where the jar is executed
 
