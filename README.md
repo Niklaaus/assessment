@@ -190,13 +190,13 @@ The application accepts input in the following format:
     <ul>
     <li><b>name</b> <i> (non-mandatory field) </i>:  name of the product</li>
     <li ><b>category</b><i> (mandatory field) </i>: Category of the item. Allowed values: <b>GROCERY, ELECTRONICS, APPARELS, HOME_DECOR, STATIONARY</b>.</li>
-    <li><b>amount </b><i> (mandatory field) </i>: amount of the item </li>
-    </li></ul>
+    <li><b>amount </b><i> (mandatory field) </i>: amount of the item </li></ul>
+    </li>
 <li> <b>"userType"</b> <i> (mandatory field) </i>: Type of the user. Allowed values: <b>EMPLOYEE, AFFILIATE, NA</b>.</li>
 <li><b>"customerTenure"</b><i> (mandatory field) </i>: The tenure of customer's relationship with the store in years.</li>
-<li> <b> "originalCurrency"</b><i> (mandatory field) </i>:Three letter code for the base currency
+<li> <b> "originalCurrency"</b><i> (mandatory field) </i>:Three-letter code for the base currency
 </li>
-<li><b>"targetCurrency"</b><i> (mandatory field) </i>:Three letter code for the target currency
+<li><b>"targetCurrency"</b><i> (mandatory field) </i>:Three-letter code for the target currency
 </li>
 </ul>
 
@@ -226,7 +226,7 @@ Sample response screenshot:
 For a user who is an employee and has a bill of \$500 for non-grocery items and \$400 for grocery items and wants the final bill in EUR :
 - 30% discount is applied to \$500 (as he is an employee); (effective total=\$350)
 - No percentage based discount on grocery items; (effective total \$350+\$400= \$750)
-- flat discount of \$5 on every \$100 in the discounted total;(effective total = \$750-((750/100)*5) = \$715 )
+- flat discount of \$5 on every \$100 in the discounted total; (effective total = \$750-((750/100)*5) = \$715 )
 - At the time of writing, USD to EUR conversion rate is <b>0.8955</b>. So final bill amount in EUR = 715*0.8955 = <b>EUR 640.283</b>
 
 
