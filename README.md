@@ -1,11 +1,11 @@
 
-# The Retail Store Discounts
+# The Currency Exchange and Discount Calculator Application
 
 ## Overview
-This is a SpringBoot application designed to calculate the final amount of an invoice by applying discounts and converting it into the requested currency. It considers multiple discount rules based on user-type, item-type and the tenure or user''s relationship with the store and  applies the highest applicable discount on it (except on grocery items). Then on the top of this, applies a flat discount of $5 per $100 on the discounted total. After that, the net payable is converted from the original currency to the target currency using the retrieved exchange rates (updated hourly).
+This is a SpringBoot application designed to calculate the final amount of an invoice by applying discounts and converting it into the requested currency. It considers multiple discount rules based on user-type, item-type and the tenure or user''s relationship with the store and  applies the highest applicable discount on it (except on grocery items). Then on the top of this, applies a flat discount of \$5 per \$100 on the discounted total. After that, the net payable is converted from the original currency to the target currency using the retrieved exchange rates (updated hourly).
 
 ## Technologies Used
- - **Java** 17
+- **Java** 17
 - **Gradle** for dependency management and project build
 - **JaCoCo** for code coverage report
 - **Spring Boot** as application framework
@@ -14,29 +14,29 @@ This is a SpringBoot application designed to calculate the final amount of an in
 ## Installation & Setup
 #### Prerequisites
 Ensure you have the following installed:
- - Java 17
- - working internet connection
+- Java 17
+- working internet connection
 
 ## Steps to Set Up:
 #### Step 1: Clone the repository
 
- - git clone https://github.com/Niklaaus/assessment.git
- - cd assessment
+- git clone https://github.com/Niklaaus/assessment.git
+- cd assessment
 
 #### Step 2: Build the project
- Windows
+Windows
 
- - `gradlew buildAndTest` : to run the tests, generate the coverage report and build the executable jar.
- - `gradlew bootJar` : to build the executable jar
+- `gradlew buildAndTest` : to run the tests, generate the coverage report and build the executable jar.
+- `gradlew bootJar` : to build the executable jar
 
- Linux
+Linux
 
-  - `./gradlew buildAndTest` : to run the tests, generate the coverage report and build the executable jar.
-  - `./gradlew bootJar` : to build the executable jar
+- `./gradlew buildAndTest` : to run the tests, generate the coverage report and build the executable jar.
+- `./gradlew bootJar` : to build the executable jar
 
-#### Step 3: Run the Application: 
- - `java -jar build/libs/assessment-0.0.1-SNAPSHOT.jar`
- - The application will start on http://localhost:8080/
+#### Step 3: Run the Application:
+- `java -jar build/libs/assessment-0.0.1-SNAPSHOT.jar`
+- The application will start on http://localhost:8080/
 
 if port 8080 is busy, provide a different port in the command like this : <b>`java -jar build/libs/assessment-0.0.1-SNAPSHOT.jar --server.port=8081` </b>.
 
@@ -50,24 +50,24 @@ Application logs will be generated in the `logs` directory inside the project ro
 ## Key Features:
 #### Percentage-Based Discounts:
 The application calculates the discount on the total amount by applying highest of the following discounts :
- - 30% discount for employees of the store.
- - 10% discount for affiliates of the store.
- - 5% discount for customers who have been with the store for more than 2 years.
- ##### Note: Only one percentage-based discount can be applied per bill, and these are not applicable to groceries.
+- 30% discount for employees of the store.
+- 10% discount for affiliates of the store.
+- 5% discount for customers who have been with the store for more than 2 years.
+##### Note: Only one percentage-based discount can be applied per bill, and these are not applicable to groceries.
 
 #### Fixed Discount:
- - A $5 discount is applied for every $100 in the amount calculated after applying the percentage discount ,if any, on the applicable items.
+- A \$5 discount is applied for every \$100 in the amount calculated after applying the percentage discount ,if any, on the applicable items.
 
 
 #### Strategy design pattern:
- - Each discount logic is encapsulated in its own class, separate from the others. The billing logic doesn't depend on any specific discount implementation but instead uses two common interfaces to apply the discounts.
+- Each discount logic is encapsulated in its own class, separate from the others. The billing logic doesn't depend on any specific discount implementation but instead uses two common interfaces to apply the discounts.
 
 #### Open-Closed principle :
- - Application follows the Open-Closed principle for maintaining different types of discounts. Discounts can be added or removed from the application without changing any other piece of code.
+- Application follows the Open-Closed principle for maintaining different types of discounts. Discounts can be added or removed from the application without changing any other piece of code.
 
 #### Unit Testing:
- - Comprehensive test coverage using JUnit to validate various discount scenarios.
-      
+- Comprehensive test coverage using JUnit to validate various discount scenarios.
+
 ## Project Structure
 
 ```md
@@ -147,7 +147,7 @@ The application calculates the discount on the total amount by applying highest 
                             ExchangeServiceTest.java        *Tests to validate the currency conversion rate API call*
 ```
 
-#### UML 
+#### UML
 ![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/uml.png?raw=true)
 
 #### Assumption
@@ -158,7 +158,7 @@ This application calculates the net payable amount based on the following rules:
 <ol>
 <li>A percentage-based discount applies depending on the user’s relationship with the store.</li>
 <li>The percentage based discounts are not applicable on Grocery items.</li>
-<li>A fixed discount of $5 is applied for every $100 in the discounted total amount.</li>
+<li>A fixed discount of \$5 is applied for every \$100 in the discounted total amount.</li>
 </ol>
 
 The application accepts input in the following format:
@@ -223,11 +223,11 @@ Sample response screenshot:
 ![alt text](https://github.com/Niklaaus/assessment/blob/master/src/main/resources/response1.png?raw=true)
 
 ## Example Scenario:
-For a user who is an employee and has a bill of $500 for non-grocery items and $400 for grocery items and wants the final bill in EUR :
- - 30% discount is applied to $500 (as he is an employee); (effective total=$350)
- - No percentage based discount on grocery items; (effective total $350+$400= $750)
- - flat discount of $5 on every $100 in the discounted total;(effective total = $750-((750/100)*5) = $715 )
- - At the time of writing, USD to EUR conversion rate is <b>0.8955</b>. So final bill amount in EUR = 715*0.8955 = <b>EUR 640.283</b>
+For a user who is an employee and has a bill of \$500 for non-grocery items and \$400 for grocery items and wants the final bill in EUR :
+- 30% discount is applied to \$500 (as he is an employee); (effective total=\$350)
+- No percentage based discount on grocery items; (effective total \$350+\$400= \$750)
+- flat discount of \$5 on every \$100 in the discounted total;(effective total = \$750-((750/100)*5) = \$715 )
+- At the time of writing, USD to EUR conversion rate is <b>0.8955</b>. So final bill amount in EUR = 715*0.8955 = <b>EUR 640.283</b>
 
 
 
